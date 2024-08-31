@@ -1,17 +1,37 @@
+/**
+ * LiftSimulation class
+ * Manages the entire lift simulation system
+ */
 class LiftSimulation {
+    /**
+     * Constructor for LiftSimulation
+     * @param {number} floors - The number of floors in the building
+     * @param {number} lifts - The number of lifts in the building
+     */
     constructor(floors, lifts) {
         this.floors = floors;
         this.lifts = lifts;
+        // Initialize lift states: each lift starts at floor 1 and is idle
         this.liftStates = Array(lifts).fill().map(() => ({ currentFloor: 1, status: 'idle' }));
+        // Initialize floor calls: each floor starts with no calls
         this.floorCalls = Array(floors + 1).fill().map(() => ({ up: false, down: false }));
+        // Queue for storing pending calls when all lifts are busy
         this.pendingCalls = [];
     }
 
+    /**
+     * Initialize the simulation
+     * Renders the UI and sets up event listeners
+     */
     init() {
         this.renderSimulation();
         this.attachEventListeners();
     }
 
+    /**
+     * Render the simulation UI
+     * Creates visual representation of floors, buttons, and lifts
+     */
     renderSimulation() {
         const container = document.getElementById('simulation-container');
         container.innerHTML = '';
@@ -47,6 +67,9 @@ class LiftSimulation {
         }
     }
 
+    /**
+     * Attach event listeners to floor buttons
+     */
     attachEventListeners() {
         document.querySelectorAll('.up-button, .down-button').forEach(button => {
             button.addEventListener('click', (e) => {
@@ -57,6 +80,11 @@ class LiftSimulation {
         });
     }
 
+    /**
+     * Process a lift call
+     * @param {number} floor - The floor where the call was made
+     * @param {string} direction - The direction of the call ('up' or 'down')
+     */
     callLift(floor, direction) {
         this.floorCalls[floor][direction] = true;
         const nearestLift = this.findNearestIdleLift(floor);
@@ -68,6 +96,11 @@ class LiftSimulation {
         }
     }
 
+    /**
+     * Find the nearest idle lift to respond to a call
+     * @param {number} floor - The floor where the call was made
+     * @returns {number} The index of the nearest idle lift, or -1 if no idle lifts
+     */
     findNearestIdleLift(floor) {
         let nearestLift = -1;
         let minDistance = Infinity;
@@ -85,6 +118,11 @@ class LiftSimulation {
         return nearestLift;
     }
 
+    /**
+     * Move a lift to the target floor
+     * @param {number} liftIndex - The index of the lift to move
+     * @param {number} targetFloor - The floor to move the lift to
+     */
     async moveLift(liftIndex, targetFloor) {
         const lift = document.getElementById(`lift-${liftIndex + 1}`);
         const liftState = this.liftStates[liftIndex];
@@ -112,6 +150,10 @@ class LiftSimulation {
         this.checkPendingCalls();
     }
 
+    /**
+     * Open and close the doors of a lift
+     * @param {HTMLElement} lift - The lift element
+     */
     async openCloseDoors(lift) {
         const leftDoor = lift.querySelector('.lift-door.left');
         const rightDoor = lift.querySelector('.lift-door.right');
@@ -129,6 +171,9 @@ class LiftSimulation {
         await new Promise(resolve => setTimeout(resolve, 2500));
     }
 
+    /**
+     * Check for pending calls and assign them to idle lifts
+     */
     checkPendingCalls() {
         if (this.pendingCalls.length > 0) {
             const nextCall = this.pendingCalls.shift();
@@ -143,6 +188,7 @@ class LiftSimulation {
     }
 }
 
+// Event listener for the start simulation button
 document.getElementById('start-simulation').addEventListener('click', () => {
     const floors = parseInt(document.getElementById('floors').value);
     const lifts = parseInt(document.getElementById('lifts').value);
