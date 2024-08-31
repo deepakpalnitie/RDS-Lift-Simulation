@@ -1,38 +1,95 @@
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --background-color: #f5f7fa;
+    --text-color: #34495e;
+    --lift-color: #ecf0f1;
+    --lift-door-color: #bdc3c7;
+    --button-hover-color: #e74c3c;
+}
+
 header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    font-size: 2.5em;
 }
 
 header p {
     margin-top: 0;
     font-style: italic;
+    font-size: 1.1em;
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 0;
+    padding: 20px;
 }
 
 #input-container {
-    margin: 20px 0;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+#input-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#input-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#start-simulation {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#start-simulation:hover {
+    background-color: #27ae60;
 }
 
 #simulation-container {
     display: flex;
     flex-direction: column-reverse;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .floor {
     display: flex;
     align-items: center;
     height: 100px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #ddd;
     position: relative;
 }
 
@@ -45,32 +102,51 @@ body {
 .floor-buttons button {
     width: 60px;
     margin: 2px 0;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.floor-buttons button:hover {
+    background-color: var(--button-hover-color);
+}
+
+.floor-number {
+    font-weight: bold;
+    margin-right: 20px;
 }
 
 .lift-shaft {
     width: 80px;
     height: 100%;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
     position: relative;
 }
 
 .lift {
     width: 70px;
     height: 90px;
-    background-color: #f0f0f0;
+    background-color: var(--lift-color);
     position: absolute;
     bottom: 5px;
     left: 5px;
     transition: bottom 2s linear;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
 }
 
 .lift-door {
     width: 50%;
     height: 100%;
-    background-color: #ddd;
+    background-color: var(--lift-door-color);
     position: absolute;
     transition: transform 2.5s;
+    border-radius: 5px;
 }
 
 .lift-door.left {
@@ -89,4 +165,35 @@ body {
 
 .lift-door.open.right {
     transform: scaleX(0);
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    header {
+        padding: 15px;
+    }
+
+    header h1 {
+        font-size: 2em;
+    }
+
+    #input-container, #simulation-container {
+        padding: 15px;
+    }
+
+    .floor {
+        height: 80px;
+    }
+
+    .lift-shaft {
+        width: 60px;
+    }
+
+    .lift {
+        width: 50px;
+        height: 70px;
+    }
 }
