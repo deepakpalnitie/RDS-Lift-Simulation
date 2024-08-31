@@ -95,9 +95,11 @@ class LiftSimulation {
         await new Promise(resolve => setTimeout(resolve, moveTime));
 
         liftState.currentFloor = targetFloor;
-        liftState.status = 'idle';
 
+        // Open and close doors only at the target floor
         await this.openCloseDoors(lift);
+
+        liftState.status = 'idle';
 
         this.floorCalls[targetFloor].up = false;
         this.floorCalls[targetFloor].down = false;
