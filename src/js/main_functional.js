@@ -42,6 +42,7 @@ function renderSimulation(state) {
                 lift.id = `lift-${j + 1}`;
                 lift.style.bottom = '0px';
                 lift.innerHTML = `
+                    <div class="lift-number">${j + 1}</div>
                     <div class="lift-door left"></div>
                     <div class="lift-door right"></div>
                 `;
@@ -128,6 +129,10 @@ async function moveLift(state, liftIndex, targetFloor) {
     const liftState = state.liftStates[liftIndex];
     liftState.status = 'moving';
 
+    // Highlight the lift number
+    const liftNumber = lift.querySelector('.lift-number');
+    liftNumber.classList.add('in-use');
+
     const floorsToMove = Math.abs(targetFloor - liftState.currentFloor);
     const moveTime = floorsToMove * 2000; // 2 seconds per floor
 
@@ -145,6 +150,9 @@ async function moveLift(state, liftIndex, targetFloor) {
     await openCloseDoors(lift);
 
     liftState.status = 'idle';
+
+    // Remove highlight from the lift number
+    liftNumber.classList.remove('in-use');
 
     // Update floor calls and button states
     state.floorCalls[targetFloor].up = false;
