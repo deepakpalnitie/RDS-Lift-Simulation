@@ -116,11 +116,32 @@ body {
 }
 
 .floor-buttons button:hover {
-    background-color: var(--button-hover-color);
+    filter: brightness(0.9);
 }
 
 .floor-buttons button.pressed {
-    background-color: var(--button-hover-color);
+    background-color: #e74c3c; /* Red color for pressed state */
+}
+
+.floor-buttons .up-button {
+    background-color: #2ecc71; /* Green color for up buttons */
+}
+
+.floor-buttons .down-button {
+    background-color: #3498db; /* Blue color for down buttons */
+}
+
+.floor-buttons .up-button:hover {
+    background-color: #27ae60; /* Darker green for up button hover */
+}
+
+.floor-buttons .down-button:hover {
+    background-color: #2980b9; /* Darker blue for down button hover */
+}
+
+.floor-buttons .up-button.pressed,
+.floor-buttons .down-button.pressed {
+    background-color: #e74c3c; /* Red color for pressed state */
 }
 
 .floor-number {
@@ -237,7 +258,7 @@ body {
 }
 
 .lift-number.in-use {
-    background-color: var(--button-hover-color);
+    background-color: #e74c3c; /* Red color matching the pressed button state */
 }
 
 @media (max-width: 768px) {
