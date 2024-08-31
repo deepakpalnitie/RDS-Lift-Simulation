@@ -134,14 +134,21 @@ body {
 
 .lift {
     width: 70px;
-    height: 90px;
+    height: 90%;
     background-color: var(--lift-color);
     position: absolute;
-    bottom: 5px;
-    left: 5px;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
     transition: bottom 2s linear;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+    .lift {
+        width: 50px;
+    }
 }
 
 .lift-door {

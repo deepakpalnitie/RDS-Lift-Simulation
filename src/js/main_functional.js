@@ -26,7 +26,7 @@ function renderSimulation(state) {
         const floor = document.createElement('div');
         floor.className = 'floor';
         floor.innerHTML = `
-            <div class="floor-buttons">
+            <div class="floor-buttons" data-floor="${i}">
                 ${i < state.floors ? `<button class="up-button" data-floor="${i}">Up</button>` : ''}
                 ${i > 1 ? `<button class="down-button" data-floor="${i}">Down</button>` : ''}
             </div>
@@ -40,6 +40,7 @@ function renderSimulation(state) {
                 const lift = document.createElement('div');
                 lift.className = 'lift';
                 lift.id = `lift-${j + 1}`;
+                lift.style.bottom = '0px';
                 lift.innerHTML = `
                     <div class="lift-door left"></div>
                     <div class="lift-door right"></div>
@@ -60,11 +61,15 @@ function renderSimulation(state) {
  */
 function attachEventListeners(state, callLift) {
     document.querySelectorAll('.up-button, .down-button').forEach(button => {
-        button.addEventListener('click', (e) => {
+        const handleEvent = (e) => {
+            e.preventDefault(); // Prevent default touch behavior
             const floor = parseInt(e.target.dataset.floor);
             const direction = e.target.classList.contains('up-button') ? 'up' : 'down';
             callLift(state, floor, direction);
-        });
+        };
+
+        button.addEventListener('click', handleEvent);
+        button.addEventListener('touchstart', handleEvent);
     });
 }
 
@@ -126,8 +131,11 @@ async function moveLift(state, liftIndex, targetFloor) {
     const floorsToMove = Math.abs(targetFloor - liftState.currentFloor);
     const moveTime = floorsToMove * 2000; // 2 seconds per floor
 
+    const floorHeight = document.querySelector('.floor').offsetHeight;
+    const newPosition = (targetFloor - 1) * floorHeight;
+
     lift.style.transition = `bottom ${moveTime}ms linear`;
-    lift.style.bottom = `${(targetFloor - 1) * 100 + 5}px`;
+    lift.style.bottom = `${newPosition}px`;
 
     await new Promise(resolve => setTimeout(resolve, moveTime));
 
@@ -138,14 +146,15 @@ async function moveLift(state, liftIndex, targetFloor) {
 
     liftState.status = 'idle';
 
+    // Update floor calls and button states
     state.floorCalls[targetFloor].up = false;
     state.floorCalls[targetFloor].down = false;
 
-    // Remove 'pressed' class from buttons
-    const upButton = document.querySelector(`.floor-buttons button.up-button[data-floor="${targetFloor}"]`);
-    const downButton = document.querySelector(`.floor-buttons button.down-button[data-floor="${targetFloor}"]`);
-    if (upButton) upButton.classList.remove('pressed');
-    if (downButton) downButton.classList.remove('pressed');
+    // Remove 'pressed' class from all buttons on the target floor
+    const floorButtons = document.querySelectorAll(`.floor-buttons[data-floor="${targetFloor}"] button`);
+    floorButtons.forEach(button => {
+        button.classList.remove('pressed');
+    });
 
     // Check for pending calls after the lift becomes idle
     checkPendingCalls(state);
@@ -158,17 +167,19 @@ async function moveLift(state, liftIndex, targetFloor) {
  * @param {string} direction - The direction of the call ('up' or 'down')
  */
 function callLift(state, floor, direction) {
-    state.floorCalls[floor][direction] = true;
-    const button = document.querySelector(`.floor-buttons button.${direction}-button[data-floor="${floor}"]`);
-    if (button) {
-        button.classList.add('pressed');
-    }
-    const nearestLift = findNearestIdleLift(state, floor);
-    if (nearestLift !== -1) {
-        moveLift(state, nearestLift, floor);
-    } else {
-        // Store the call if all lifts are busy
-        state.pendingCalls.push({ floor, direction });
+    if (!state.floorCalls[floor][direction]) {
+        state.floorCalls[floor][direction] = true;
+        const button = document.querySelector(`.floor-buttons[data-floor="${floor}"] .${direction}-button`);
+        if (button) {
+            button.classList.add('pressed');
+        }
+        const nearestLift = findNearestIdleLift(state, floor);
+        if (nearestLift !== -1) {
+            moveLift(state, nearestLift, floor);
+        } else {
+            // Store the call if all lifts are busy
+            state.pendingCalls.push({ floor, direction });
+        }
     }
 }
 
