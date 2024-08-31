@@ -4,6 +4,7 @@ class LiftSimulation {
         this.lifts = lifts;
         this.liftStates = Array(lifts).fill().map(() => ({ currentFloor: 1, status: 'idle' }));
         this.floorCalls = Array(floors + 1).fill().map(() => ({ up: false, down: false }));
+        this.pendingCalls = [];
     }
 
     init() {
@@ -61,6 +62,9 @@ class LiftSimulation {
         const nearestLift = this.findNearestIdleLift(floor);
         if (nearestLift !== -1) {
             this.moveLift(nearestLift, floor);
+        } else {
+            // Store the call if all lifts are busy
+            this.pendingCalls.push({ floor, direction });
         }
     }
 
@@ -103,6 +107,9 @@ class LiftSimulation {
 
         this.floorCalls[targetFloor].up = false;
         this.floorCalls[targetFloor].down = false;
+
+        // Check for pending calls after the lift becomes idle
+        this.checkPendingCalls();
     }
 
     async openCloseDoors(lift) {
@@ -120,6 +127,19 @@ class LiftSimulation {
         rightDoor.classList.remove('open');
 
         await new Promise(resolve => setTimeout(resolve, 2500));
+    }
+
+    checkPendingCalls() {
+        if (this.pendingCalls.length > 0) {
+            const nextCall = this.pendingCalls.shift();
+            const nearestLift = this.findNearestIdleLift(nextCall.floor);
+            if (nearestLift !== -1) {
+                this.moveLift(nearestLift, nextCall.floor);
+            } else {
+                // If still no idle lift, put the call back in the queue
+                this.pendingCalls.unshift(nextCall);
+            }
+        }
     }
 }
 
