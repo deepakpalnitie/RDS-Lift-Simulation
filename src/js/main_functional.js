@@ -105,13 +105,17 @@ async function openCloseDoors(lift) {
     const leftDoor = lift.querySelector('.lift-door.left');
     const rightDoor = lift.querySelector('.lift-door.right');
 
-    // Open doors
+    // Open doors - quick start, slow finish
+    leftDoor.style.transition = 'transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
+    rightDoor.style.transition = 'transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
     leftDoor.classList.add('open');
     rightDoor.classList.add('open');
 
     await new Promise(resolve => setTimeout(resolve, 2500));
 
-    // Close doors
+    // Close doors - slow start, quick finish
+    leftDoor.style.transition = 'transform 2.5s cubic-bezier(0.75, 0, 0.75, 0.9)';
+    rightDoor.style.transition = 'transform 2.5s cubic-bezier(0.75, 0, 0.75, 0.9)';
     leftDoor.classList.remove('open');
     rightDoor.classList.remove('open');
 
@@ -139,7 +143,8 @@ async function moveLift(state, liftIndex, targetFloor) {
     const floorHeight = document.querySelector('.floor').offsetHeight;
     const newPosition = (targetFloor - 1) * floorHeight;
 
-    lift.style.transition = `bottom ${moveTime}ms linear`;
+    // Use ease-in-out for smooth acceleration and deceleration
+    lift.style.transition = `bottom ${moveTime}ms cubic-bezier(0.42, 0, 0.58, 1)`;
     lift.style.bottom = `${newPosition}px`;
 
     await new Promise(resolve => setTimeout(resolve, moveTime));
@@ -223,5 +228,25 @@ function initSimulation(floors, lifts) {
 document.getElementById('start-simulation').addEventListener('click', () => {
     const floors = parseInt(document.getElementById('floors').value);
     const lifts = parseInt(document.getElementById('lifts').value);
+    
+    if (isNaN(floors) || floors < 2 || floors > 9) {
+        document.getElementById('error-message').textContent = 'Please enter a valid number of floors (2-9).';
+        return;
+    }
+    
+    if (isNaN(lifts) || lifts < 1 || lifts > 5) {
+        document.getElementById('error-message').textContent = 'Please enter a valid number of lifts (1-5).';
+        return;
+    }
+    
+    document.getElementById('error-message').textContent = ''; // Clear error message
     initSimulation(floors, lifts);
 });
+
+// Initialize simulation with default values on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const floors = parseInt(document.getElementById('floors').value);
+    const lifts = parseInt(document.getElementById('lifts').value);
+    initSimulation(floors, lifts);
+});
+

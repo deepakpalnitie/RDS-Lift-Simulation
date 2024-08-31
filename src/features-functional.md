@@ -62,24 +62,32 @@ This document outlines the key features of the Lift Simulation project, providin
    Documentation:
    When a lift is moving, its number is highlighted by adding an 'in-use' class. This provides a visual cue to users about which lifts are currently active. The highlight is removed when the lift becomes idle again.
 
-5. Lift Mechanics
-   - Lifts move between floors at a speed of 2 seconds per floor
-   - Lift doors open for 2.5 seconds and close for another 2.5 seconds at each stop
-   - The simulation finds the nearest idle lift to respond to a floor call
-   
+5. Smooth Lift Movement
+   - Lifts move between floors at a variable speed
+   - Lifts slow down when approaching a floor for a more realistic movement
+
    Reference:
-   ```javascript
-   File: src/js/main-functional.js
-   Functions: moveLift(state, liftIndex, targetFloor), openCloseDoors(lift), findNearestIdleLift(state, floor)
+   ```javascript:src/js/main_functional.js
+   Function: moveLift
    ```
 
    Documentation:
-   The lift mechanics are implemented through several functions:
-   - `moveLift`: Handles the vertical movement of lifts, using CSS transitions for smooth animation.
-   - `openCloseDoors`: Manages the opening and closing of lift doors, including timing.
-   - `findNearestIdleLift`: Determines the most efficient lift to respond to a call by calculating the nearest idle lift.
+   The lift movement is implemented using CSS transitions with an ease-in-out timing function. This creates a more natural and smooth movement, where the lift starts slowly, speeds up in the middle of its journey, and then slows down as it approaches the target floor. This enhances the visual realism of the simulation.
 
-6. Call Management
+6. Realistic Door Movement
+   - Lift doors open and close with variable speeds
+   - Door opening: Quick start with a gradual slowdown
+   - Door closing: Slow start with gradual acceleration
+
+   Reference:
+   ```javascript:src/js/main_functional.js
+   Function: openCloseDoors
+   ```
+
+   Documentation:
+   The lift door movements are simulated using CSS transitions with custom cubic-bezier timing functions. This creates a more realistic effect where doors open quickly but decelerate as they reach full opening, and close slowly at first but accelerate towards the end. This adds to the overall realism of the lift simulation.
+
+7. Call Management
    - Users can call lifts by clicking floor buttons
    - The system manages pending calls when all lifts are busy
    - Once a lift becomes idle, it checks for any pending calls
@@ -96,7 +104,7 @@ This document outlines the key features of the Lift Simulation project, providin
    - `callLift`: Processes a lift call, either assigning an idle lift or queueing the call.
    - `checkPendingCalls`: Checks for and processes any queued calls when a lift becomes available.
 
-7. Responsive Design
+8. Responsive Design
    - Mobile-friendly design using flexbox layout
    
    Reference:
@@ -108,7 +116,7 @@ This document outlines the key features of the Lift Simulation project, providin
    Documentation:
    The CSS utilizes flexbox to create a responsive layout that adapts to different screen sizes. This ensures that the simulation is usable on both desktop and mobile devices.
 
-8. Visual Feedback
+9. Visual Feedback
    - Lift movement is animated using CSS transitions
    - Lift doors open and close with animations
    - Floor buttons change color when pressed and revert when the lift arrives
@@ -122,21 +130,21 @@ This document outlines the key features of the Lift Simulation project, providin
    Documentation:
    CSS transitions are used to create smooth animations for lift movement and door operations. The floor buttons change color when pressed, providing immediate visual feedback to the user. When a lift arrives at the called floor, the button color reverts to its original state. This comprehensive visual feedback makes the simulation more intuitive and engaging.
 
-9. State Management
-   - Keeps track of each lift's current floor and status (idle or moving)
-   - Efficiently stores and manages floor calls
+10. State Management
+    - Keeps track of each lift's current floor and status (idle or moving)
+    - Efficiently stores and manages floor calls
    
-   Reference:
-   ```javascript
-   File: src/js/main-functional.js
-   Function: createInitialState(floors, lifts)
-   ```
+    Reference:
+    ```javascript
+    File: src/js/main-functional.js
+    Function: createInitialState(floors, lifts)
+    ```
 
-   Documentation:
-   The `createInitialState` function initializes and maintains the state of the entire system:
-   - `liftStates`: An array of objects representing each lift's current floor and status.
-   - `floorCalls`: An array tracking active calls for each floor.
-   - `pendingCalls`: A queue of calls that cannot be immediately serviced.
+    Documentation:
+    The `createInitialState` function initializes and maintains the state of the entire system:
+    - `liftStates`: An array of objects representing each lift's current floor and status.
+    - `floorCalls`: An array tracking active calls for each floor.
+    - `pendingCalls`: A queue of calls that cannot be immediately serviced.
 
 ## Conclusion
 These features fulfill the requirements specified in the README.md file, including both Milestone 1 and Milestone 2 objectives. The implementation provides a fully functional lift simulation with an intuitive user interface and efficient lift management system. The use of functional programming principles allows for better modularity, testability, and potential for future extensions.
