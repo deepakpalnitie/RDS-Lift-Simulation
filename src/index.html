@@ -13,6 +13,7 @@
         <h1>Lift Simulation</h1>
         <p>Created by: Deepak Pal (GitHub: <a href="https://github.com/deepakpalnitie" target="_blank">deepakpalnitie</a>)</p>
     </header>
+    <div id="error-message" style="color: red; margin-bottom: 10px;"></div>
     <div id="input-container">
         <label for="floors">Number of Floors:</label>
         <input type="number" id="floors" min="2" max="10" value="5">
@@ -23,5 +24,30 @@
     <div id="simulation-container"></div>
     <!-- <script src="js/main.js"></script> -->
     <script src="js/main_functional.js"></script>
+    <script>
+        document.getElementById('start-simulation').addEventListener('click', () => {
+            const floorsInput = document.getElementById('floors');
+            const liftsInput = document.getElementById('lifts');
+            const errorMessage = document.getElementById('error-message');
+            
+            const floors = parseInt(floorsInput.value);
+            const lifts = parseInt(liftsInput.value);
+            
+            errorMessage.textContent = ''; // Clear previous error messages
+            
+            if (isNaN(floors) || floors < 2 || floors > 10) {
+                errorMessage.textContent = 'Please enter a valid number of floors (2-10).';
+                return;
+            }
+            
+            if (isNaN(lifts) || lifts < 1 || lifts > 5) {
+                errorMessage.textContent = 'Please enter a valid number of lifts (1-5).';
+                return;
+            }
+            
+            // If inputs are valid, start the simulation
+            initSimulation(floors, lifts);
+        });
+    </script>
 </body>
 </html>

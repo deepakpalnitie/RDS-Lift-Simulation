@@ -46,6 +46,9 @@ body {
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
+    width: 100%;
+    max-width: 300px;
+    box-sizing: border-box;
 }
 
 #input-container label {
@@ -60,6 +63,7 @@ body {
     margin-bottom: 15px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    box-sizing: border-box;
 }
 
 #start-simulation {
@@ -207,4 +211,13 @@ body {
         width: 50px;
         height: 70px;
     }
+}
+
+#input-container {
+    max-width: 100%;
+    padding: 10px;
+}
+
+#input-container input {
+    padding: 8px;
 }
