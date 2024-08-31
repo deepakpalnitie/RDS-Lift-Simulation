@@ -141,6 +141,12 @@ async function moveLift(state, liftIndex, targetFloor) {
     state.floorCalls[targetFloor].up = false;
     state.floorCalls[targetFloor].down = false;
 
+    // Remove 'pressed' class from buttons
+    const upButton = document.querySelector(`.floor-buttons button.up-button[data-floor="${targetFloor}"]`);
+    const downButton = document.querySelector(`.floor-buttons button.down-button[data-floor="${targetFloor}"]`);
+    if (upButton) upButton.classList.remove('pressed');
+    if (downButton) downButton.classList.remove('pressed');
+
     // Check for pending calls after the lift becomes idle
     checkPendingCalls(state);
 }
@@ -153,6 +159,10 @@ async function moveLift(state, liftIndex, targetFloor) {
  */
 function callLift(state, floor, direction) {
     state.floorCalls[floor][direction] = true;
+    const button = document.querySelector(`.floor-buttons button.${direction}-button[data-floor="${floor}"]`);
+    if (button) {
+        button.classList.add('pressed');
+    }
     const nearestLift = findNearestIdleLift(state, floor);
     if (nearestLift !== -1) {
         moveLift(state, nearestLift, floor);

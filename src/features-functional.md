@@ -88,15 +88,16 @@ This document outlines the key features of the Lift Simulation project, providin
 6. Visual Feedback
    - Lift movement is animated using CSS transitions
    - Lift doors open and close with animations
+   - Floor buttons change color when pressed and revert when the lift arrives
    
    Reference:
    ```css
    File: src/css/main.css
-   Selectors: .lift, .lift-door
+   Selectors: .lift, .lift-door, .floor-buttons button.pressed
    ```
 
    Documentation:
-   CSS transitions are used to create smooth animations for lift movement and door operations. This provides visual feedback to the user, making the simulation more intuitive and engaging.
+   CSS transitions are used to create smooth animations for lift movement and door operations. The floor buttons change color when pressed, providing immediate visual feedback to the user. When a lift arrives at the called floor, the button color reverts to its original state. This comprehensive visual feedback makes the simulation more intuitive and engaging.
 
 7. State Management
    - Keeps track of each lift's current floor and status (idle or moving)

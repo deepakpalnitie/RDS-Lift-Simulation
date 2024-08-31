@@ -87,6 +87,10 @@ class LiftSimulation {
      */
     callLift(floor, direction) {
         this.floorCalls[floor][direction] = true;
+        const button = document.querySelector(`.floor-buttons button.${direction}-button[data-floor="${floor}"]`);
+        if (button) {
+            button.classList.add('pressed');
+        }
         const nearestLift = this.findNearestIdleLift(floor);
         if (nearestLift !== -1) {
             this.moveLift(nearestLift, floor);
@@ -145,6 +149,12 @@ class LiftSimulation {
 
         this.floorCalls[targetFloor].up = false;
         this.floorCalls[targetFloor].down = false;
+
+        // Remove 'pressed' class from buttons
+        const upButton = document.querySelector(`.floor-buttons button.up-button[data-floor="${targetFloor}"]`);
+        const downButton = document.querySelector(`.floor-buttons button.down-button[data-floor="${targetFloor}"]`);
+        if (upButton) upButton.classList.remove('pressed');
+        if (downButton) downButton.classList.remove('pressed');
 
         // Check for pending calls after the lift becomes idle
         this.checkPendingCalls();

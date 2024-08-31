@@ -115,6 +115,10 @@ body {
     background-color: var(--button-hover-color);
 }
 
+.floor-buttons button.pressed {
+    background-color: var(--button-hover-color);
+}
+
 .floor-number {
     font-weight: bold;
     margin-right: 20px;
