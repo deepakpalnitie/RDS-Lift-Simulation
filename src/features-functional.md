@@ -1,5 +1,12 @@
 # Lift Simulation Features
 
+## Author Information
+**Name:** Deepak Pal
+**Date:** 30-Aug-2024
+**GitHub:** [deepakpalnitie](https://github.com/deepakpalnitie)
+**Project:** Lift Simulation
+**Version:** 1.0
+
 ## Overview
 This document outlines the key features of the Lift Simulation project, providing a comprehensive guide to its functionality and implementation using functional programming principles.
 
