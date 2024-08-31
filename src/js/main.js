@@ -11,11 +11,8 @@ class LiftSimulation {
     constructor(floors, lifts) {
         this.floors = floors;
         this.lifts = lifts;
-        // Initialize lift states: each lift starts at floor 1 and is idle
         this.liftStates = Array(lifts).fill().map(() => ({ currentFloor: 1, status: 'idle' }));
-        // Initialize floor calls: each floor starts with no calls
         this.floorCalls = Array(floors + 1).fill().map(() => ({ up: false, down: false }));
-        // Queue for storing pending calls when all lifts are busy
         this.pendingCalls = [];
     }
 
@@ -40,7 +37,7 @@ class LiftSimulation {
             const floor = document.createElement('div');
             floor.className = 'floor';
             floor.innerHTML = `
-                <div class="floor-buttons">
+                <div class="floor-buttons" data-floor="${i}">
                     ${i < this.floors ? `<button class="up-button" data-floor="${i}">Up</button>` : ''}
                     ${i > 1 ? `<button class="down-button" data-floor="${i}">Down</button>` : ''}
                 </div>
@@ -54,7 +51,9 @@ class LiftSimulation {
                     const lift = document.createElement('div');
                     lift.className = 'lift';
                     lift.id = `lift-${j + 1}`;
+                    lift.style.bottom = '0px';
                     lift.innerHTML = `
+                        <div class="lift-number">${j + 1}</div>
                         <div class="lift-door left"></div>
                         <div class="lift-door right"></div>
                     `;
@@ -72,11 +71,15 @@ class LiftSimulation {
      */
     attachEventListeners() {
         document.querySelectorAll('.up-button, .down-button').forEach(button => {
-            button.addEventListener('click', (e) => {
+            const handleEvent = (e) => {
+                e.preventDefault(); // Prevent default touch behavior
                 const floor = parseInt(e.target.dataset.floor);
                 const direction = e.target.classList.contains('up-button') ? 'up' : 'down';
                 this.callLift(floor, direction);
-            });
+            };
+
+            button.addEventListener('click', handleEvent);
+            button.addEventListener('touchstart', handleEvent);
         });
     }
 
@@ -86,17 +89,19 @@ class LiftSimulation {
      * @param {string} direction - The direction of the call ('up' or 'down')
      */
     callLift(floor, direction) {
-        this.floorCalls[floor][direction] = true;
-        const button = document.querySelector(`.floor-buttons button.${direction}-button[data-floor="${floor}"]`);
-        if (button) {
-            button.classList.add('pressed');
-        }
-        const nearestLift = this.findNearestIdleLift(floor);
-        if (nearestLift !== -1) {
-            this.moveLift(nearestLift, floor);
-        } else {
-            // Store the call if all lifts are busy
-            this.pendingCalls.push({ floor, direction });
+        if (!this.floorCalls[floor][direction]) {
+            this.floorCalls[floor][direction] = true;
+            const button = document.querySelector(`.floor-buttons[data-floor="${floor}"] .${direction}-button`);
+            if (button) {
+                button.classList.add('pressed');
+            }
+            const nearestLift = this.findNearestIdleLift(floor);
+            if (nearestLift !== -1) {
+                this.moveLift(nearestLift, floor);
+            } else {
+                // Store the call if all lifts are busy
+                this.pendingCalls.push({ floor, direction });
+            }
         }
     }
 
@@ -132,11 +137,19 @@ class LiftSimulation {
         const liftState = this.liftStates[liftIndex];
         liftState.status = 'moving';
 
+        // Highlight the lift number
+        const liftNumber = lift.querySelector('.lift-number');
+        liftNumber.classList.add('in-use');
+
         const floorsToMove = Math.abs(targetFloor - liftState.currentFloor);
         const moveTime = floorsToMove * 2000; // 2 seconds per floor
 
-        lift.style.transition = `bottom ${moveTime}ms linear`;
-        lift.style.bottom = `${(targetFloor - 1) * 100 + 5}px`;
+        const floorHeight = document.querySelector('.floor').offsetHeight;
+        const newPosition = (targetFloor - 1) * floorHeight;
+
+        // Use ease-in-out for smooth acceleration and deceleration
+        lift.style.transition = `bottom ${moveTime}ms cubic-bezier(0.42, 0, 0.58, 1)`;
+        lift.style.bottom = `${newPosition}px`;
 
         await new Promise(resolve => setTimeout(resolve, moveTime));
 
@@ -147,14 +160,18 @@ class LiftSimulation {
 
         liftState.status = 'idle';
 
+        // Remove highlight from the lift number
+        liftNumber.classList.remove('in-use');
+
+        // Update floor calls and button states
         this.floorCalls[targetFloor].up = false;
         this.floorCalls[targetFloor].down = false;
 
-        // Remove 'pressed' class from buttons
-        const upButton = document.querySelector(`.floor-buttons button.up-button[data-floor="${targetFloor}"]`);
-        const downButton = document.querySelector(`.floor-buttons button.down-button[data-floor="${targetFloor}"]`);
-        if (upButton) upButton.classList.remove('pressed');
-        if (downButton) downButton.classList.remove('pressed');
+        // Remove 'pressed' class from all buttons on the target floor
+        const floorButtons = document.querySelectorAll(`.floor-buttons[data-floor="${targetFloor}"] button`);
+        floorButtons.forEach(button => {
+            button.classList.remove('pressed');
+        });
 
         // Check for pending calls after the lift becomes idle
         this.checkPendingCalls();
@@ -168,13 +185,17 @@ class LiftSimulation {
         const leftDoor = lift.querySelector('.lift-door.left');
         const rightDoor = lift.querySelector('.lift-door.right');
 
-        // Open doors
+        // Open doors - quick start, slow finish
+        leftDoor.style.transition = 'transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
+        rightDoor.style.transition = 'transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
         leftDoor.classList.add('open');
         rightDoor.classList.add('open');
 
         await new Promise(resolve => setTimeout(resolve, 2500));
 
-        // Close doors
+        // Close doors - slow start, quick finish
+        leftDoor.style.transition = 'transform 2.5s cubic-bezier(0.75, 0, 0.75, 0.9)';
+        rightDoor.style.transition = 'transform 2.5s cubic-bezier(0.75, 0, 0.75, 0.9)';
         leftDoor.classList.remove('open');
         rightDoor.classList.remove('open');
 
@@ -200,6 +221,26 @@ class LiftSimulation {
 
 // Event listener for the start simulation button
 document.getElementById('start-simulation').addEventListener('click', () => {
+    const floors = parseInt(document.getElementById('floors').value);
+    const lifts = parseInt(document.getElementById('lifts').value);
+    
+    if (isNaN(floors) || floors < 2 || floors > 9) {
+        document.getElementById('error-message').textContent = 'Please enter a valid number of floors (2-9).';
+        return;
+    }
+    
+    if (isNaN(lifts) || lifts < 1 || lifts > 5) {
+        document.getElementById('error-message').textContent = 'Please enter a valid number of lifts (1-5).';
+        return;
+    }
+    
+    document.getElementById('error-message').textContent = ''; // Clear error message
+    const simulation = new LiftSimulation(floors, lifts);
+    simulation.init();
+});
+
+// Initialize simulation with default values on page load
+document.addEventListener('DOMContentLoaded', () => {
     const floors = parseInt(document.getElementById('floors').value);
     const lifts = parseInt(document.getElementById('lifts').value);
     const simulation = new LiftSimulation(floors, lifts);
