@@ -39,7 +39,30 @@ This document outlines the key features of the Lift Simulation project, providin
    Documentation:
    The `renderSimulation` function dynamically creates the HTML structure for the simulation. It generates floor elements with appropriate buttons and lift shafts based on the user's input. This function ensures that the UI accurately reflects the desired number of floors and lifts.
 
-3. Lift Mechanics
+3. Input Validation
+   - Validates user input for floors (2-10) and lifts (1-5)
+   - Displays error messages for invalid inputs
+   
+   Reference:
+   ```html:src/index.html
+   Element: #start-simulation (event listener)
+   ```
+
+   Documentation:
+   The input validation is handled in the HTML file using JavaScript. It checks if the input values are within the specified ranges and displays an error message if they are not. This ensures that the simulation only starts with valid inputs.
+
+4. Visual Feedback for Active Lifts
+   - Highlights the lift number when the lift is in use
+   
+   Reference:
+   ```javascript:src/js/main_functional.js
+   Function: moveLift
+   ```
+
+   Documentation:
+   When a lift is moving, its number is highlighted by adding an 'in-use' class. This provides a visual cue to users about which lifts are currently active. The highlight is removed when the lift becomes idle again.
+
+5. Lift Mechanics
    - Lifts move between floors at a speed of 2 seconds per floor
    - Lift doors open for 2.5 seconds and close for another 2.5 seconds at each stop
    - The simulation finds the nearest idle lift to respond to a floor call
@@ -56,7 +79,7 @@ This document outlines the key features of the Lift Simulation project, providin
    - `openCloseDoors`: Manages the opening and closing of lift doors, including timing.
    - `findNearestIdleLift`: Determines the most efficient lift to respond to a call by calculating the nearest idle lift.
 
-4. Call Management
+6. Call Management
    - Users can call lifts by clicking floor buttons
    - The system manages pending calls when all lifts are busy
    - Once a lift becomes idle, it checks for any pending calls
@@ -73,7 +96,7 @@ This document outlines the key features of the Lift Simulation project, providin
    - `callLift`: Processes a lift call, either assigning an idle lift or queueing the call.
    - `checkPendingCalls`: Checks for and processes any queued calls when a lift becomes available.
 
-5. Responsive Design
+7. Responsive Design
    - Mobile-friendly design using flexbox layout
    
    Reference:
@@ -85,7 +108,7 @@ This document outlines the key features of the Lift Simulation project, providin
    Documentation:
    The CSS utilizes flexbox to create a responsive layout that adapts to different screen sizes. This ensures that the simulation is usable on both desktop and mobile devices.
 
-6. Visual Feedback
+8. Visual Feedback
    - Lift movement is animated using CSS transitions
    - Lift doors open and close with animations
    - Floor buttons change color when pressed and revert when the lift arrives
@@ -99,7 +122,7 @@ This document outlines the key features of the Lift Simulation project, providin
    Documentation:
    CSS transitions are used to create smooth animations for lift movement and door operations. The floor buttons change color when pressed, providing immediate visual feedback to the user. When a lift arrives at the called floor, the button color reverts to its original state. This comprehensive visual feedback makes the simulation more intuitive and engaging.
 
-7. State Management
+9. State Management
    - Keeps track of each lift's current floor and status (idle or moving)
    - Efficiently stores and manages floor calls
    
