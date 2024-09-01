@@ -230,12 +230,12 @@ document.getElementById('start-simulation').addEventListener('click', () => {
     const lifts = parseInt(document.getElementById('lifts').value);
     
     if (isNaN(floors) || floors < 2 ) {
-        document.getElementById('error-message').textContent = 'Please enter a valid number of floors (2-9).';
+        document.getElementById('error-message').textContent = 'Please enter a valid number of floors (Atleast 2).';
         return;
     }
     
     if (isNaN(lifts) || lifts < 1 ) {
-        document.getElementById('error-message').textContent = 'Please enter a valid number of lifts (1-5).';
+        document.getElementById('error-message').textContent = 'Please enter a valid number of lifts (Atleast 1).';
         return;
     }
     
