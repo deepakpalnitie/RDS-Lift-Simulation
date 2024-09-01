@@ -229,12 +229,12 @@ document.getElementById('start-simulation').addEventListener('click', () => {
     const floors = parseInt(document.getElementById('floors').value);
     const lifts = parseInt(document.getElementById('lifts').value);
     
-    if (isNaN(floors) || floors < 2 || floors > 9) {
+    if (isNaN(floors) || floors < 2 ) {
         document.getElementById('error-message').textContent = 'Please enter a valid number of floors (2-9).';
         return;
     }
     
-    if (isNaN(lifts) || lifts < 1 || lifts > 5) {
+    if (isNaN(lifts) || lifts < 1 ) {
         document.getElementById('error-message').textContent = 'Please enter a valid number of lifts (1-5).';
         return;
     }
@@ -244,9 +244,9 @@ document.getElementById('start-simulation').addEventListener('click', () => {
 });
 
 // Initialize simulation with default values on page load
-document.addEventListener('DOMContentLoaded', () => {
-    const floors = parseInt(document.getElementById('floors').value);
-    const lifts = parseInt(document.getElementById('lifts').value);
-    initSimulation(floors, lifts);
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//     const floors = parseInt(document.getElementById('floors').value);
+//     const lifts = parseInt(document.getElementById('lifts').value);
+//     initSimulation(floors, lifts);
+// });
 

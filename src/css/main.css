@@ -154,6 +154,10 @@ body {
 .floor-number {
     font-weight: bold;
     margin-right: 20px;
+    width: 70px; /* Fixed width */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .lift-shaft {
@@ -175,6 +179,9 @@ body {
     transition: bottom 2s linear;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
+    /* add vertical line to the lift at the center */
+    border-left: 2px solid #fff;
+    border-right: 2px solid #fff;
 }
 
 @media (max-width: 768px) {
