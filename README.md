@@ -2,6 +2,9 @@
 
 This project is a fork of the original [@Real-Dev-Squad/Lift-Simulation](https://github.com/Real-Dev-Squad/Lift-Simulation). I have **implemented** it **using both class-based and functional components**.
 
+## Workig Demo
+Demo can be reached from this [demo link](https://darling-praline-2c57e9.netlify.app/)
+
 ## Features
 
 1. User input for number of floors (2-9) and lifts (1-5)
