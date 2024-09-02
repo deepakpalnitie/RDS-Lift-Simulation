@@ -121,7 +121,7 @@ async function openCloseDoors(lift) {
         background.style.opacity = 1;
     }, 100);
 
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     // Close doors - slow start, quick finish
     leftDoor.style.transition = 'transform 2.5s cubic-bezier(0.75, 0, 0.75, 0.9)';
