@@ -111,7 +111,17 @@ async function openCloseDoors(lift) {
     leftDoor.classList.add('open');
     rightDoor.classList.add('open');
 
-    await new Promise(resolve => setTimeout(resolve, 2500));
+    // Add tom.gif background
+    const background = document.createElement('div');
+    background.className = 'lift-background';
+    lift.appendChild(background);
+
+    // Show the background
+    setTimeout(() => {
+        background.style.opacity = 1;
+    }, 100);
+
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     // Close doors - slow start, quick finish
     leftDoor.style.transition = 'transform 2.5s cubic-bezier(0.75, 0, 0.75, 0.9)';
@@ -119,7 +129,16 @@ async function openCloseDoors(lift) {
     leftDoor.classList.remove('open');
     rightDoor.classList.remove('open');
 
+    
+
     await new Promise(resolve => setTimeout(resolve, 2500));
+    // Hide the background after doors start closing
+    setTimeout(() => {
+        background.style.opacity = 0;
+    }, 100);
+
+    // Remove the background after doors are fully closed
+    lift.removeChild(background);
 }
 
 /**
