@@ -120,12 +120,14 @@ async function openCloseDoors(lift) {
     // Add random background
     const background = document.createElement('div');
     background.className = 'lift-background';
-    background.style.backgroundImage = `url('../img/${randomBackground}')`;
-    console.log("url from window",window.location.href)
-    console.log("Base url from window",window.location.origin)
+    let imagePath= '/img/';
+    if (window.location.href.includes('127.0.0.1') || window.location.href.includes('localhost')) {
+        imagePath = '../src/img/';
+    }
+    background.style.backgroundImage = `url('${imagePath}/${randomBackground}')`;
+    
     lift.appendChild(background);
     liftNumber.style.zIndex = 0;
-    console.log("Setting liftNumber zIndex",liftNumber.style.zIndex);
 
     // Show the background
     setTimeout(() => {
