@@ -104,6 +104,8 @@ function findNearestIdleLift(state, floor) {
 async function openCloseDoors(lift) {
     const leftDoor = lift.querySelector('.lift-door.left');
     const rightDoor = lift.querySelector('.lift-door.right');
+    const liftNumber = lift.querySelector('.lift-number');
+    liftNumberZIndexOld=liftNumber.style.zIndex
 
     // Open doors - quick start, slow finish
     leftDoor.style.transition = 'transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
@@ -111,10 +113,17 @@ async function openCloseDoors(lift) {
     leftDoor.classList.add('open');
     rightDoor.classList.add('open');
 
-    // Add tom.gif background
+    // List of background images
+    const backgrounds = ['bean.gif','frog.gif', 'bear.gif', 'cat.gif', 'joker.gif', 'party.gif', 'tom.gif', 'cat2.gif'];
+    const randomBackground = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+
+    // Add random background
     const background = document.createElement('div');
     background.className = 'lift-background';
+    background.style.backgroundImage = `url('../src/img/${randomBackground}')`;
     lift.appendChild(background);
+    liftNumber.style.zIndex = 0;
+    console.log("Setting liftNumber zIndex",liftNumber.style.zIndex);
 
     // Show the background
     setTimeout(() => {
@@ -129,15 +138,17 @@ async function openCloseDoors(lift) {
     leftDoor.classList.remove('open');
     rightDoor.classList.remove('open');
 
-    
-
-    await new Promise(resolve => setTimeout(resolve, 2500));
     // Hide the background after doors start closing
     setTimeout(() => {
         background.style.opacity = 0;
-    }, 100);
+    }, 2400);
 
+    await new Promise(resolve => setTimeout(resolve, 2500));
+    
+    liftNumber.style.zIndex = liftNumberZIndexOld;
+    await new Promise(resolve => setTimeout(resolve, 500));
     // Remove the background after doors are fully closed
+    
     lift.removeChild(background);
 }
 
