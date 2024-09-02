@@ -121,6 +121,8 @@ async function openCloseDoors(lift) {
     const background = document.createElement('div');
     background.className = 'lift-background';
     background.style.backgroundImage = `url('../img/${randomBackground}')`;
+    console.log("url from window",window.location.href)
+    console.log("Base url from window",window.location.origin)
     lift.appendChild(background);
     liftNumber.style.zIndex = 0;
     console.log("Setting liftNumber zIndex",liftNumber.style.zIndex);
